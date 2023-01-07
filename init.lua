@@ -11,6 +11,7 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   vim.cmd [[packadd packer.nvim]]
 end
 
+
 require('packer').startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
@@ -124,8 +125,8 @@ vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
 -- Set colorscheme
-vim.o.termguicolors = true --false on windows
-vim.cmd [[colorscheme onedark]] --comment on windows
+vim.o.termguicolors = false
+vim.cmd [[colorscheme onedark]]
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -388,8 +389,8 @@ require('lspconfig').sumneko_lua.setup {
         globals = { 'vim' },
       },
       workspace = {
-		checkThirdParty = false,
-		library = vim.api.nvim_get_runtime_file('', true) },
+        checkThirdParty = false,
+        library = vim.api.nvim_get_runtime_file('', true) },
       -- Do not send telemetry data containing a randomized but unique identifier
       telemetry = { enable = false },
     },
@@ -443,18 +444,25 @@ cmp.setup {
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 vim.cmd('command NT NERDTree')
+vim.cmd[[
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+]]
 vim.cmd([[
-	set listchars=tab:>·,trail:~,extends:>,precedes:<,space:·
-	set list
-	" 4 spaces indentation
-	set tabstop=4 softtabstop=0 expandtab shiftwidth=4
+
+"	set listchars=tab:>·,trail:~,extends:>,precedes:<,space:·
+"	set list
+        " 4 spaces indentation
+" 	set tabstop=4 softtabstop=0 expandtab shiftwidth=4
 	" Deal with unwanted white spaces (show them in red)
-	highlight ExtraWhitespace ctermbg=red guibg=red
-	match ExtraWhitespace /\s\+$/
-	autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-	autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-	autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-	autocmd BufWinLeave * call clearmatches()
+"	highlight ExtraWhitespace ctermbg=red guibg=red
+"	match ExtraWhitespace /\s\+$/
+" 	autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+"	autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+"	autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+"	autocmd BufWinLeave * call clearmatches()
 " Coc CSS
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
